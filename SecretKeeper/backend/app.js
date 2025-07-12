@@ -1,5 +1,3 @@
-// backend/app.js (clean, Render-ready)
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
@@ -17,20 +15,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// CORS Configuration
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://secretkeeper-frontend.onrender.com' // replace with your actual Render frontend URL when deployed
-];
-
+// CORS Configuration (Frontend-Backend Communication)
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // React frontend URL
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Credentials', 'true'); // allow cookies
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
@@ -49,22 +39,27 @@ app.use(
     graphiql: {
       headerEditorEnabled: true,
     },
-    context: { req, res },
+    context: { req, res }, // Pass both req and res
   }))
 );
 
 // MongoDB connection & server start
+const mongoHost = process.env.MONGO_HOST || 'cluster0-shard-00-00.b3yckd0.mongodb.net:27017'; // Example host, update with your Atlas host(s)
+const mongoUri = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${mongoHost}/${process.env.MONGO_DB}?ssl=true&authSource=admin&retryWrites=true&w=majority`;
+
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
+    mongoUri,
     {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
     }
   )
   .then(() => {
     const PORT = process.env.PORT || 8000;
     app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}/graphql`);
+      console.log(`Server is running on http://localhost:${PORT}/graphql`);
     });
   })
   .catch((err) => {
