@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // CORS Configuration
-const FRONTEND_URL = process.env.FRONTEND_URL || 'https://secretkeeper-frontend.onrender.com'; // Set to your deployed frontend URL
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://secretkeeper-85qn.onrender.com'; // Set to your deployed frontend URL
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL);
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
