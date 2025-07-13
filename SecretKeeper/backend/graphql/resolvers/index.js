@@ -42,11 +42,11 @@ module.exports = {
         { expiresIn: '1h' }
       );
 
-      // Store JWT in HTTP-only cookie
+      // Store JWT in HTTP-only cookie (production: secure, sameSite None)
       res.cookie('token', token, {
         httpOnly: true, // Prevent JavaScript access to the cookie
-        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-        sameSite: 'Lax', // Prevent CSRF attacks by restricting cookie to same-site requests
+        secure: true,
+        sameSite: 'None', // Prevent CSRF attacks by restricting cookie to same-site requests
         maxAge: 3600000 // 1 hour
       });
 
@@ -76,11 +76,11 @@ module.exports = {
         { expiresIn: '1h' }
       );
 
-      // Store JWT in HTTP-only cookie
+      // Store JWT in HTTP-only cookie (production: secure, sameSite None)
       res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Lax',
+        secure: true,
+        sameSite: 'None',
         maxAge: 3600000 // 1 hour
       });
  
@@ -151,8 +151,8 @@ module.exports = {
     const { res } = context; // Extract response from context
     res.cookie('token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Lax',
+      secure: true,
+      sameSite: 'None',
       expires: new Date(0), // Expire the cookie immediately
     });
     return true;
