@@ -42,10 +42,7 @@ app.use(
 );
 
 // MongoDB connection & server start
-const mongoHost = process.env.MONGO_HOST ||
-  'cluster0-shard-00-00.b3yckd0.mongodb.net:27017,cluster0-shard-00-01.b3yckd0.mongodb.net:27017,cluster0-shard-00-02.b3yckd0.mongodb.net:27017';
-
-const mongoUri = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${mongoHost}/${process.env.MONGO_DB}?ssl=true&authSource=admin&retryWrites=true&w=majority`;
+const mongoUri = process.env.MONGO_URI;
 
 mongoose
   .connect(mongoUri, { serverSelectionTimeoutMS: 5000 })
